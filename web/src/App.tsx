@@ -32,6 +32,10 @@ function App() {
   }>({});
   const [pools, setPools] = useState<Pool[]>([]);
   const [rewardBalance, setRewardBalance] = useState<string>("0");
+  const [lpToken1Balance, setLpToken1Balance] = useState<string>("0");
+  const [lpToken2Balance, setLpToken2Balance] = useState<string>("0");
+  const [lpToken3Balance, setLpToken3Balance] = useState<string>("0");
+
   const [selectedPool, setSelectedPool] = useState<number>(0);
   const [stakeAmount, setStakeAmount] = useState<string>("");
   const [withdrawAmount, setWithdrawAmount] = useState<string>("");
@@ -94,14 +98,14 @@ function App() {
     setLoading(true);
     try {
       // Get reward token balance
-      const balance = await rewardToken.balanceOf(account);
-      setRewardBalance(ethers.formatEther(balance));
+      const rewardTokenBalance = await rewardToken.balanceOf(account);
+      setRewardBalance(ethers.formatEther(rewardTokenBalance));
 
       // Get pool data
       const poolLength = await farm.poolLength();
       const poolData: Pool[] = [];
 
-      for (let i = 0; i < poolLength.toNumber(); i++) {
+      for (let i = 0; i < Number(poolLength); i++) {
         const poolInfo = await farm.poolInfo(i);
         const userInfo = await farm.userInfo(i, account);
         const pendingReward = await farm.pendingRewards(i, account);
@@ -109,11 +113,20 @@ function App() {
         // Get LP token name
         const lpToken = lpTokens[poolInfo.lpToken];
         const name = await lpToken.name();
-
+        const lpTokenBalance = await lpToken.balanceOf(account);
+        if (i === 0) {
+          setLpToken1Balance(ethers.formatEther(lpTokenBalance));
+        }
+        if (i === 1) {
+          setLpToken2Balance(ethers.formatEther(lpTokenBalance));
+        }
+        if (i === 2) {
+          setLpToken3Balance(ethers.formatEther(lpTokenBalance));
+        }
         poolData.push({
           id: i,
           name,
-          allocation: poolInfo.allocPoint.toNumber(),
+          allocation: Number(poolInfo.allocPoint),
           address: poolInfo.lpToken,
           yourStake: ethers.formatEther(userInfo.amount),
           pendingRewards: ethers.formatEther(pendingReward),
@@ -165,19 +178,23 @@ function App() {
 
   // Refresh data when account changes
   useEffect(() => {
-    if (
-      account &&
-      farmContract &&
-      rewardTokenContract &&
-      Object.keys(lpTokenContracts).length > 0
-    ) {
-      loadUserData(
-        account.address,
-        farmContract,
-        rewardTokenContract,
-        lpTokenContracts
-      );
-    }
+    const fetchData = async () => {
+      if (
+        account &&
+        farmContract &&
+        rewardTokenContract &&
+        Object.keys(lpTokenContracts).length > 0
+      ) {
+        loadUserData(
+          account.address,
+          farmContract,
+          rewardTokenContract,
+          lpTokenContracts
+        );
+      }
+
+      fetchData();
+    };
   }, [account, farmContract, rewardTokenContract, lpTokenContracts]);
 
   // Approve and deposit LP tokens
@@ -186,13 +203,14 @@ function App() {
 
     setLoading(true);
     try {
+      debugger;
       const pool = pools[selectedPool];
       const lpToken = lpTokenContracts[pool.address];
       const amount = ethers.parseEther(stakeAmount);
 
       // Check allowance
       const allowance = await lpToken.allowance(account, farmAddress);
-      if (allowance.lt(amount)) {
+      if (Number(allowance) < amount) {
         // Approve if needed
         const approveTx = await lpToken.approve(farmAddress, ethers.MaxUint256);
         await approveTx.wait();
@@ -287,11 +305,17 @@ function App() {
           </button>
         ) : (
           <div className="account-info">
-            <p>
-              Connected: {account?.address.slice(0, 6)}...
-              {account?.address.slice(-4)}
-            </p>
+            <p>Connected: {account?.address}</p>
             <p>Reward Balance: {parseFloat(rewardBalance).toFixed(4)} RWT</p>
+            <p>
+              LP Token 1 Balance: {parseFloat(lpToken1Balance).toFixed(4)} LP
+            </p>
+            <p>
+              LP Token 2 Balance: {parseFloat(lpToken2Balance).toFixed(4)} LP
+            </p>
+            <p>
+              LP Token 3 Balance: {parseFloat(lpToken3Balance).toFixed(4)} LP
+            </p>
           </div>
         )}
       </header>

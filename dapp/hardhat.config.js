@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("@nomicfoundation/hardhat-verify");
 require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -12,5 +13,8 @@ module.exports = {
       url: process.env.ALCHEMY_HTTP_URL,
       accounts: [process.env.OWNER_KEY],
     },
+  },
+  etherscan: {
+    apiKey: process.env.ARBISCAN_API_KEY,
   },
 };

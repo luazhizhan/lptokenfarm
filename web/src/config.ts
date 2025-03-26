@@ -2,7 +2,7 @@
 export const farmAddress = import.meta.env.VITE_FARM_ADDRESS; // Replace with your deployed farm address
 
 export const rewardTokenAddress = import.meta.env.VITE_REWARD_TOKEN_ADDRESS; // Replace with your deployed reward token address
-console.log(rewardTokenAddress);
+
 // LP token addresses (replace with your deployed LP token addresses)
 export const lpTokenAddresses = [
   import.meta.env.VITE_LP_TOKEN_ADDRESS_1, // LP Token 1 address (50% allocation)
