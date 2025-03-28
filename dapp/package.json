@@ -1,12 +1,17 @@
 {
   "name": "dapp",
+  "scripts": {
+    "test": "npx hardhat test --network hardhat"
+  },
   "dependencies": {
-    "chai": "^5.2.0",
+    "chai": "^4.2.0",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.5"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
     "@nomicfoundation/hardhat-ignition-ethers": "^0.15.10",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.13",
     "@openzeppelin/contracts": "^5.2.0",

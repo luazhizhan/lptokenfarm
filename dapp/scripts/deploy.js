@@ -34,10 +34,8 @@ async function main() {
   );
   console.log("LP Token 3 deployed to:", lpToken3.target);
 
-  // Deploy Farm with current block as start block
-  const currentBlock = await ethers.provider.getBlockNumber();
-  const startBlock = currentBlock + 10; // Start 10 blocks from now
-
+  // Deploy Farm
+  const startBlock = Number(process.env.ARB_L1_BLOCK_NUMBER) + 10; // Start 10 blocks from L1 block
   const LPTokenFarm = await ethers.getContractFactory("LPTokenFarm");
   const farm = await LPTokenFarm.deploy(rewardToken.target, startBlock);
   console.log("LPTokenFarm deployed to:", farm.target);

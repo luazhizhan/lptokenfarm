@@ -31,6 +31,8 @@ function App() {
     [key: string]: ethers.Contract;
   }>({});
   const [pools, setPools] = useState<Pool[]>([]);
+
+  // wallet balances
   const [rewardBalance, setRewardBalance] = useState<string>("0");
   const [lpToken1Balance, setLpToken1Balance] = useState<string>("0");
   const [lpToken2Balance, setLpToken2Balance] = useState<string>("0");
@@ -192,9 +194,8 @@ function App() {
           lpTokenContracts
         );
       }
-
-      fetchData();
     };
+    fetchData();
   }, [account, farmContract, rewardTokenContract, lpTokenContracts]);
 
   // Approve and deposit LP tokens
@@ -203,7 +204,6 @@ function App() {
 
     setLoading(true);
     try {
-      debugger;
       const pool = pools[selectedPool];
       const lpToken = lpTokenContracts[pool.address];
       const amount = ethers.parseEther(stakeAmount);
@@ -306,15 +306,20 @@ function App() {
         ) : (
           <div className="account-info">
             <p>Connected: {account?.address}</p>
-            <p>Reward Balance: {parseFloat(rewardBalance).toFixed(4)} RWT</p>
             <p>
-              LP Token 1 Balance: {parseFloat(lpToken1Balance).toFixed(4)} LP
+              Wallet Reward Balance: {parseFloat(rewardBalance).toFixed(4)} RWT
             </p>
             <p>
-              LP Token 2 Balance: {parseFloat(lpToken2Balance).toFixed(4)} LP
+              Wallet LP Token 1 Balance:{" "}
+              {parseFloat(lpToken1Balance).toFixed(4)} LP
             </p>
             <p>
-              LP Token 3 Balance: {parseFloat(lpToken3Balance).toFixed(4)} LP
+              Wallet LP Token 2 Balance:{" "}
+              {parseFloat(lpToken2Balance).toFixed(4)} LP
+            </p>
+            <p>
+              Wallet LP Token 3 Balance:{" "}
+              {parseFloat(lpToken3Balance).toFixed(4)} LP
             </p>
           </div>
         )}
@@ -333,7 +338,7 @@ function App() {
                   }`}
                   onClick={() => setSelectedPool(pool.id)}
                 >
-                  <h3>{pool.name}</h3>
+                  <h3>{pool.name} (click to switch pool)</h3>
                   <p>Allocation: {pool.allocation}%</p>
                   <p>Your Stake: {parseFloat(pool.yourStake).toFixed(4)} LP</p>
                   <p>
