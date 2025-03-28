@@ -1,5 +1,18 @@
 # dapp
 
+## Environment variables (.env)
+
+```
+// ARBITRUM SEPOLIA URL
+ALCHEMY_HTTP_URL=<URL>
+
+// https://sepolia.etherscan.io/blocks
+ARB_L1_BLOCK_NUMBER=<NUMBER>
+
+OWNER_KEY=<KEY>
+ETHERSCAN_API_KEY=<KEY>
+```
+
 ## Local Development
 
 ```bash
@@ -34,4 +47,10 @@ LP TOKEN 1
 
 ```bash
 npx hardhat verify --network arbitrumSepolia "0xC283b9016cCFa4Fb92da89A74Aae9EF4AA395858" "LP Token 1" "LP1" 1000000000000000000000000
+```
+
+Reward Token
+
+```bash
+npx hardhat verify --network arbitrumSepolia "0x4Da2D3EFa52366e925AD6b18cC8d526195b7Af98"
 ```
